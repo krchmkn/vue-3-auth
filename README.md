@@ -6,4 +6,8 @@
 
 ### Run
 
+```sh
+bash run.sh
+```
+
 See [Dockerfile](Dockerfile) and [run.sh](run.sh)
