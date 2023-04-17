@@ -1,4 +1,4 @@
-For proper use, add this setting to vite.config.ts
+For proper use, add this setting to `vite.config.ts`
 
 ```js
 // vite.config.ts
