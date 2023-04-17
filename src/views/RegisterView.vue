@@ -8,7 +8,7 @@ import { useAuth } from 'npmpackage'
 
 const form = ref<RegisterReq>({
   email: '',
-  emailConfirmCode: '', // 111111
+  emailConfirmCode: '',
   password: '',
   userinfo: {
     account_name: ''
@@ -37,7 +37,7 @@ function onSubmit() {
   pending.value = true
   auth
     .register(form.value)
-    .then(() => router.push({ name: 'home' }))
+    .then(() => router.push({ name: 'login', query: { email: form.value.email } }))
     .catch((err: Error) => (erroMsg.value = err.message))
     .finally(() => (pending.value = false))
 }

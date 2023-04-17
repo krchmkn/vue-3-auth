@@ -1,18 +1,24 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import AppForm from '@/components/AppForm.vue'
 import { useAuth } from 'npmpackage'
-import router from '@/router'
+import { useRouter, useRoute } from 'vue-router'
 
 const form = ref<LoginReq>({
   credential: '',
   password: ''
 })
 
+const router = useRouter()
+const route = useRoute()
 const pending = ref(false)
 const erroMsg = ref('')
 const auth = useAuth()
+
+onMounted(() => {
+  form.value.credential = route.query.email?.toString() || ''
+})
 
 function onSubmit() {
   pending.value = true
