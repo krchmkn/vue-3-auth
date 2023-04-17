@@ -34,7 +34,7 @@ const value = computed({
           :disabled="pending"
           type="number"
           id="emailConfirmCode"
-          placeholder="Email confirm code 111111"
+          placeholder="Email confirm code"
           required
         />
       </label>
