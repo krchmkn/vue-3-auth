@@ -6,4 +6,4 @@
 
 ### Run
 
-See [run.sh](run.sh)
+See [Dockerfile](Dockerfile) and [run.sh](run.sh)
