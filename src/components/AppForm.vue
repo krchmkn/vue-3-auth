@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import AppButton from '@/components/AppButton.vue'
 
-const props = defineProps<{
+defineProps<{
   pending?: boolean
+  disabled?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -11,11 +12,15 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <form @submit.prevent="emit('submit')">
+  <form @keyup.enter="emit('submit')">
     <slot></slot>
 
     <slot name="actions">
-      <AppButton :pending="props.pending" />
+      <AppButton
+        :disabled="disabled"
+        :pending="pending"
+        @click="emit('submit')"
+      />
     </slot>
   </form>
 </template>

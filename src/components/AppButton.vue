@@ -1,11 +1,12 @@
 <script setup lang="ts">
-const props = defineProps<{
+defineProps<{
   pending?: boolean
+  disabled?: boolean
 }>()
 </script>
 
 <template>
-  <button :aria-busy="props.pending" :disabled="props.pending">
+  <button type="button" :aria-busy="pending" :disabled="disabled">
     <slot>Submit</slot>
   </button>
 </template>

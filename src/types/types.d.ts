@@ -1,5 +1,6 @@
 type RegisterReq = {
   email: string
+  emailConfirmCode: string | number
   password: string
   userinfo: {
     account_name: string
@@ -15,6 +16,10 @@ type LogoutReg = {
   refreshToken: string
 }
 
-type RegenerateTokensReg = {
-  refreshToken: string
+type SendConfirmCodeReq = {
+  email: string
+  phone: string
+  use_call: boolean
 }
+
+declare module 'npmpackage'

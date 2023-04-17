@@ -1,31 +1,34 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { RouterLink } from 'vue-router'
-import login from '@/api/login'
 import AppForm from '@/components/AppForm.vue'
+import { useAuth } from 'npmpackage'
+import router from '@/router'
 
 const form = ref<LoginReq>({
   credential: '',
   password: ''
 })
 
-const router = useRouter()
 const pending = ref(false)
+const erroMsg = ref('')
+const auth = useAuth()
 
-async function onSubmit() {
+function onSubmit() {
   pending.value = true
-  try {
-    await login(form.value)
-    router.push({ name: 'home' })
-  } finally {
-    pending.value = false
-  }
+  auth
+    .login(form.value)
+    .then(() => router.push({ name: 'home' }))
+    .catch((err: Error) => (erroMsg.value = err.message))
+    .finally(() => (pending.value = false))
 }
 </script>
 
 <template>
   <article>
+    <Transition>
+      <header v-if="erroMsg">{{ erroMsg }}</header>
+    </Transition>
     <h1>Login</h1>
     <AppForm :pending="pending" @submit="onSubmit">
       <label for="login">

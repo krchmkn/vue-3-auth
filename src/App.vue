@@ -22,4 +22,8 @@ import { RouterView } from 'vue-router'
 .v-leave-to {
   opacity: 0;
 }
+
+.container {
+  max-width: 600px !important;
+}
 </style>

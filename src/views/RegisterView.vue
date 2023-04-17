@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import register from '@/api/register'
 import { RouterLink } from 'vue-router'
 import AppForm from '@/components/AppForm.vue'
+import EmailConfirm from '@/components/EmailConfirm.vue'
+import { useAuth } from 'npmpackage'
 
 const form = ref<RegisterReq>({
   email: '',
+  emailConfirmCode: '', // 111111
   password: '',
   userinfo: {
     account_name: ''
@@ -15,22 +17,39 @@ const form = ref<RegisterReq>({
 
 const router = useRouter()
 const pending = ref(false)
+const pendingCode = ref(false)
+const erroMsg = ref('')
+const auth = useAuth()
 
-async function onSubmit() {
+function onCodeRequest() {
+  pendingCode.value = true
+  auth
+    .sendConfirmCode({
+      email: form.value.email,
+      use_call: false
+    })
+    .then((code: number) => (form.value.emailConfirmCode = code))
+    .catch((err: Error) => (erroMsg.value = err.message))
+    .finally(() => (pendingCode.value = false))
+}
+
+function onSubmit() {
   pending.value = true
-  try {
-    await register(form.value)
-    router.push({ name: 'home' })
-  } finally {
-    pending.value = false
-  }
+  auth
+    .register(form.value)
+    .then(() => router.push({ name: 'home' }))
+    .catch((err: Error) => (erroMsg.value = err.message))
+    .finally(() => (pending.value = false))
 }
 </script>
 
 <template>
   <article>
+    <Transition>
+      <header v-if="erroMsg">{{ erroMsg }}</header>
+    </Transition>
     <h1>Create account</h1>
-    <AppForm :pending="pending" @submit="onSubmit">
+    <AppForm :pending="pending" @submit="onSubmit" :disabled="!form.emailConfirmCode || pending">
       <label for="account">
         Account name
         <input
@@ -48,6 +67,16 @@ async function onSubmit() {
         Email
         <input v-model="form.email" :disabled="pending" type="email" id="email" required />
       </label>
+
+      <Transition>
+        <EmailConfirm
+          v-if="form.email"
+          v-model="form.emailConfirmCode"
+          :pending="pendingCode"
+          :disabled="pending || pendingCode"
+          @click="onCodeRequest"
+        />
+      </Transition>
 
       <label for="password">
         Password
